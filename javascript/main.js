@@ -1,7 +1,6 @@
 import questions from '../json/questions.json' assert { type: 'json' }
 
 
-
 const questionsKeysArray = Object.keys(questions)
 
 
@@ -13,11 +12,11 @@ const randQuestion = questions[randomObjectKey]
 
 
 
-var quizContainer = document.getElementById('quiz');
-var resultsContainer = document.getElementById('results');
-var submitButton = document.getElementById('submit');
+var quizContainer = $('#quiz');
+var resultsContainer = $('#results');
+var submitButton = $('#submit');
 
-console.log(randQuestion)
+quizContainer.html("");
 function generateQuiz(randQuestion, quizContainer, resultsContainer, submitButton) {
   
   
@@ -31,42 +30,36 @@ function generateQuiz(randQuestion, quizContainer, resultsContainer, submitButto
     for(let answer in randQuestion.answers){
 
 			
-			answers.push(
-				'<label>'
-					+ '<input type="radio" name="question" value="'+randQuestion.answers[answer]+'">'
-					+randQuestion.answers[answer]
-				+ '</label>' + '<br>'
+			answers.push(("<label>" + "<input type='radio' name='question' value='" + randQuestion.answers[answer] + "'" + ">" + randQuestion.answers[answer] + "</label>" + "<br>")
 			);
 		}
 
 	
-		output.push(
-			'<div class="question">' + randQuestion.question + '</div>'
-			+ '<div class="answers">' + answers.join('') + '</div>'
+		output.push(("<div class='question'>" + randQuestion.question + "</div>" + "<div class='answers'>" + answers.join("") + "</div>")
 		);
 
-    quizContainer.innerHTML = output.join('');
+    quizContainer.html(output.join(""));
 
 
   }
 
   function showResults(randQuestion, quizContainer, resultsContainer) {
 
-    var answerContainers = quizContainer.querySelectorAll('.answers');
+    var answerContainers = quizContainer.find('.answers');
 
     var userAnswer = '';
     
     for(var i=0; i<answerContainers.length; i++){
-    userAnswer = (answerContainers[i].querySelector('input[name="question"]:checked')||{}).value;
+    userAnswer = ($(answerContainers[i]).find("input[name='question']:checked") || {}).val();
 
     if(userAnswer===randQuestion.correctAnswer){
-			resultsContainer.innerHTML = 'correct!';
+			resultsContainer.html("correct!");
 			
 			answerContainers[i].style.color = 'lightgreen';
 		}
 		
 		else{
-			resultsContainer.innerHTML = 'incorrect.';
+			resultsContainer.html("incorrect.");
 			answerContainers[i].style.color = 'red';
 		}
 	
@@ -76,9 +69,9 @@ function generateQuiz(randQuestion, quizContainer, resultsContainer, submitButto
 
   showQuestions(randQuestion, quizContainer);
 
-  submitButton.onclick = function() {
+  submitButton.on("click", function () {
     showResults(randQuestion, quizContainer, resultsContainer);
-  }
+  });
 
 
 }
